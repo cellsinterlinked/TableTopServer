@@ -16,10 +16,17 @@ const server = http.createServer(app);
 // const io = socketio(server);
 const io = socketio(server , {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://tabletopassistant.netlify.app/",
     methods: ["GET", "POST"]
   }
 })
+
+// const io = socketio(server , {
+//   cors: {
+//     origin: "http://localhost:3000",
+//     methods: ["GET", "POST"]
+//   }
+// })
 app.use(cors())
 app.use(router)
 
