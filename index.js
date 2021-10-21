@@ -15,7 +15,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server , {
   cors: {
-    origin: "http://tabletopassistant.netlify.app/",
+    origin: "https://tabletopassistant.netlify.app",
     methods: ["GET", "POST"]
   }
 })
