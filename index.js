@@ -6,27 +6,28 @@ const cors = require('cors')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
 
 
-const PORT = process.env.PORT || 5000
+// const PORT = process.env.PORT || 5000
+const PORT = 5000
 
 const router = require('./router');
 const { callbackify } = require('util');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server , {
-  cors: {
-    origin: "https://tabletopassistant.netlify.app",
-    methods: ["GET", "POST"]
-  }
-})
-// const io = socketio(server);
-
 // const io = socketio(server , {
 //   cors: {
-//     origin: "http://localhost:3000",
+//     origin: "https://tabletopassistant.netlify.app",
 //     methods: ["GET", "POST"]
 //   }
 // })
+// const io = socketio(server);
+
+const io = socketio(server , {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+})
 app.use(cors())
 app.use(router)
 
@@ -81,7 +82,7 @@ io.on('connect', (socket) => {
   socket.on('sendNPCData', (npc, callback) => {
     const user = getUser(socket.id);
 
-    io.to(user.room).emit('npc', {name: npc.name, portrait: npc.portrait})
+    io.to(user.room).emit('npc', {name: npc.name, portrait: npc.portrait, notes: []})
   })
 
 
@@ -92,10 +93,11 @@ io.on('connect', (socket) => {
   })
 
 
-  socket.on('sendNPCNote', (name, note, callback) => {
+  socket.on('sendNPCNote', (name, note, icon, myName) => {
     const user = getUser(socket.id);
+    
 
-    io.to(user.room). emit('sendNPCNote', name, note)
+    io.to(user.room). emit('noteTransfer', {name: name, note:note, icon:icon, poster:[myName]})
   })
 
 
