@@ -14,20 +14,20 @@ const { callbackify } = require('util');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server , {
-  cors: {
-    origin: "https://tabletopassistant.netlify.app",
-    methods: ["GET", "POST"]
-  }
-})
-
-
 // const io = socketio(server , {
 //   cors: {
-//     origin: "http://localhost:3000",
+//     origin: "https://tabletopassistant.netlify.app",
 //     methods: ["GET", "POST"]
 //   }
 // })
+
+
+const io = socketio(server , {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+})
 app.use(cors())
 app.use(router)
 
@@ -124,6 +124,18 @@ io.on('connect', (socket) => {
     const user = getUser(socket.id)
 
     io.to(user.room).emit('clearMonsterInfo', clearValue)
+  })
+
+  socket.on('updateBattleGroup', (updatedGroup) => {
+    const user = getUser(socket.id)
+    console.log("server fired when it was supposed to")
+    io.to(user.room).emit('updateBattleGroup', updatedGroup)
+
+  })
+
+  socket.on('updateKillFeed', (newData, newBattleGroup) => {
+    const user = getUser(socket.id)
+    io.to(user.room).emit('updateKillFeed', {newData: newData, newBattleGroup: newBattleGroup})
   })
 
   socket.on('clearPlayerPosition', (clearValue) => {
