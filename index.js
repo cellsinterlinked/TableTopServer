@@ -14,20 +14,20 @@ const { callbackify } = require('util');
 
 const app = express();
 const server = http.createServer(app);
-// const io = socketio(server , {
-//   cors: {
-//     origin: "https://tabletopassistant.netlify.app",
-//     methods: ["GET", "POST"]
-//   }
-// })
-
-
 const io = socketio(server , {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://tabletopassistant.netlify.app",
     methods: ["GET", "POST"]
   }
 })
+
+
+// const io = socketio(server , {
+//   cors: {
+//     origin: "http://localhost:3000",
+//     methods: ["GET", "POST"]
+//   }
+// })
 app.use(cors())
 app.use(router)
 
